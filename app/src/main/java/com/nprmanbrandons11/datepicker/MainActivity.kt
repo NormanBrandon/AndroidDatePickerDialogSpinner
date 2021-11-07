@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.nprmanbrandons11.datepicker.databinding.ActivityMainBinding
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 
 
 class MainActivity : AppCompatActivity(){
@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity(){
     private var dia:Int = 0
     private var mes:Int = 0
     private var año:Int = 0
-    private val mayoria_de_Edad = 6570
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,18 +23,32 @@ class MainActivity : AppCompatActivity(){
         binding.textViewFecha.setOnClickListener{
             showDatePickerDialog()
         }
-        binding.buttonContinue.setOnClickListener {
+        binding.buttonContinuar.setOnClickListener {
+            var c:Calendar = Calendar.getInstance()
             if(pickedDate){
-                val cal1 = GregorianCalendar()
-                val cal2 = GregorianCalendar()
-                cal1.set(año,mes,dia)
-                cal2.set(Calendar.YEAR,Calendar.MONTH,Calendar.DAY_OF_MONTH)
-                val diference :Int = (cal2.timeInMillis.toInt() - cal1.timeInMillis.toInt()) *(1000*60*60*24)
-                if(diference > mayoria_de_Edad) {
-                    Toast.makeText(this, "${diference} Eres Mayor de Edad", Toast.LENGTH_SHORT).show()
+                if(c.get(Calendar.YEAR) - año   > 18){
+                    Toast.makeText(this,"Eres mayor de Edad, excelente ",Toast.LENGTH_SHORT).show()
+                }
+                else if( c.get(Calendar.YEAR) - año == 18){
+                    if(mes > c.get(Calendar.MONTH)){
+                        Toast.makeText(this,"Eres mayor de Edad, excelente",Toast.LENGTH_SHORT).show()
+                    }
+                    else if(mes == c.get(Calendar.MONTH)){
+                       if(dia >= c.get(Calendar.DAY_OF_MONTH)){
+                           Toast.makeText(this,"Eres mayor de edad, excelente",Toast.LENGTH_SHORT).show()
+                       }
+
+                        else{
+                           Toast.makeText(this,"Eres menor de edad, no puedes ingresar, estas a días",Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    else{
+                        Toast.makeText(this,"Eres menor de edad, no puedes ingresar, estas a meses",Toast.LENGTH_SHORT).show()
+                    }
+
                 }
                 else{
-                    Toast.makeText(this, "${diference} Eres menor de Edad", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this,"Eres menor de edad, no puedes ingresar ",Toast.LENGTH_SHORT).show()
                 }
             }
             else{
